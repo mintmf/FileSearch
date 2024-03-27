@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace FileSearch
 {
@@ -26,8 +28,10 @@ namespace FileSearch
 
         private UserSettings settings;
 
-        private int foundFiles = 0;
-        private int allFilesCount = 0;
+        private int foundFilesCount = 0;
+        private int totalFilesCount = 0;
+
+        private TreeNode currentNode;
 
         public FileSearchForm()
         {
@@ -91,13 +95,17 @@ namespace FileSearch
         private void CreateAndStartThreads()
         {
 
-            fileSearchThread = new Thread(new ThreadStart(SearchFiles));
+            //fileSearchThread = new Thread(new ThreadStart(SearchFiles));
+            
+
+            fileSearchThread = new Thread(new ThreadStart(FileSearchWrapper));
+
             fileSearchThread.IsBackground = true;
             fileSearchThread.Start();
 
-            getAllFilesCountThread = new Thread(new ThreadStart(GetAllFilesCount));
-            getAllFilesCountThread.IsBackground = true;
-            getAllFilesCountThread.Start();
+            //getAllFilesCountThread = new Thread(new ThreadStart(GetAllFilesCount));
+            //getAllFilesCountThread.IsBackground = true;
+            //getAllFilesCountThread.Start();
         }
 
         private void AbortThreadsIfExist()
@@ -116,6 +124,135 @@ namespace FileSearch
         private void Timer_Tick(object sender, EventArgs e)
         {
             labelSearchTime.Text = stopwatch.Elapsed.ToString();
+        }
+
+        private void FileSearchWrapper()
+        {
+            var rootNode = new TreeNode(directoryName);
+
+            if (fileSearchResultTreeView.InvokeRequired)
+            {
+                Action addNode = delegate
+                {
+                    //fileSearchResultTreeView.Nodes.Add(rootNode);
+                };
+
+                fileSearchResultTreeView.Invoke(addNode);
+            }
+            
+            manualResetEvent.Set();
+
+            FileSearch(directoryName, rootNode, fileNameTextBox.Text, new List<TreeNode>());
+
+            if (stopSearchButton.InvokeRequired)
+            {
+                Action disableStopButton = delegate
+                {
+                    SearchCompletedUpdate();
+                };
+
+                stopSearchButton.Invoke(disableStopButton);
+            }
+
+            stopwatch.Stop();
+        }
+
+        private TreeNode FileSearch(string searchDirectoryFullPath, TreeNode parentNode, string searchPattern, List<TreeNode> buffer)
+        {
+            var searchDirectoryName = new DirectoryInfo(searchDirectoryFullPath).Name;
+            var currentNode = new TreeNode(searchDirectoryName);
+            buffer.Add(currentNode);
+
+            try
+            {
+                foreach (string directory in Directory.GetDirectories(searchDirectoryFullPath, "*", SearchOption.TopDirectoryOnly))
+                {
+                    var searchResult = FileSearch(directory, parentNode, searchPattern, buffer);
+
+                    if (searchResult != null)
+                    {
+                        buffer = new List<TreeNode>();
+                        parentNode = currentNode;
+                    }
+
+                    manualResetEvent.WaitOne();
+                }
+
+                foreach (string fileFullPath in Directory.GetFiles(searchDirectoryFullPath))
+                {
+                    IncrementTotalFilesCount();
+
+                    var fileName = Path.GetFileName(fileFullPath);
+
+                    if (Regex.IsMatch(fileName, searchPattern))
+                    {
+                        IncrementFoundFilesCount();
+
+                        AddToCurrentNode(fileName, parentNode, buffer);
+
+                        if (parentNode != currentNode)
+                        {
+                            buffer = new List<TreeNode>();
+                            parentNode = currentNode;
+                        }
+                    }
+
+                    manualResetEvent.WaitOne();
+                }
+
+            }
+            catch (UnauthorizedAccessException) { }
+
+            buffer.Remove(currentNode);
+
+            return parentNode == currentNode ? currentNode : null;
+        }
+
+        private void AddToCurrentNode(string fileName, TreeNode parentNode, List<TreeNode> buffer)
+        {
+            var fileNode = new TreeNode(fileName);
+
+            if (buffer.Count == 0)
+            {
+                if (fileSearchResultTreeView.InvokeRequired)
+                {
+                    Action addNode = delegate
+                    {
+                        parentNode.Nodes.Add(fileName);
+
+                        if (expandAllCheckBox.Checked)
+                        {
+                            fileSearchResultTreeView.ExpandAll();
+                        }
+                    };
+
+                    fileSearchResultTreeView.Invoke(addNode);
+                }
+
+                return;
+            }
+
+            for (int i = 0; i < buffer.Count - 1; i++)
+            {
+                buffer[i].Nodes.Add(buffer[i + 1]);
+            }
+
+            buffer[buffer.Count - 1].Nodes.Add(fileNode);
+
+            if (fileSearchResultTreeView.InvokeRequired)
+            {
+                Action addNode = delegate
+                {
+                    parentNode.Nodes.Add(buffer[0]);
+
+                    if (expandAllCheckBox.Checked)
+                    {
+                        fileSearchResultTreeView.ExpandAll();
+                    }
+                };
+
+                fileSearchResultTreeView.Invoke(addNode);
+            }
         }
 
         private void SearchFiles()
@@ -139,7 +276,7 @@ namespace FileSearch
 
                                 AddFileToTreeView(filePathSplit, 0, fileSearchResultTreeView.Nodes);
 
-                                UpdateFoundFilesNumber();
+                                IncrementFoundFilesCount();
                                 
                             }
 
@@ -158,7 +295,7 @@ namespace FileSearch
 
                         AddFileToTreeView(filePathSplit, 0, fileSearchResultTreeView.Nodes);
 
-                        UpdateFoundFilesNumber();
+                        IncrementFoundFilesCount();
                     }
 
                     manualResetEvent.WaitOne();
@@ -178,13 +315,23 @@ namespace FileSearch
             stopwatch.Stop();
         }
 
-        private void UpdateFoundFilesNumber()
+        private void IncrementTotalFilesCount()
+        {
+            if (labelTotalFiles.InvokeRequired)
+            {
+                totalFilesCount++;
+                Action showTotalFilesCount = delegate { labelTotalFiles.Text = "Всего файлов: " + totalFilesCount; };
+                labelTotalFiles.Invoke(showTotalFilesCount);
+            }
+        }
+
+        private void IncrementFoundFilesCount()
         {
             if (labelFoundFiles.InvokeRequired)
             {
-                foundFiles++;
-                Action showAllFilesNumber = delegate { labelFoundFiles.Text = "Найдено файлов: " + foundFiles; };
-                labelTotalFiles.Invoke(showAllFilesNumber);
+                foundFilesCount++;
+                Action showFoundFilesCount = delegate { labelFoundFiles.Text = "Найдено файлов: " + foundFilesCount; };
+                labelFoundFiles.Invoke(showFoundFilesCount);
             }
         }
 
@@ -200,7 +347,7 @@ namespace FileSearch
                 {
                     try
                     {
-                        allFilesCount += Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories).Count();
+                        totalFilesCount += Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories).Count();
                         UpdateAllFilesCount();
                     }
                     catch (UnauthorizedAccessException) { }
@@ -208,7 +355,7 @@ namespace FileSearch
                     manualResetEvent.WaitOne();
                 }
 
-                allFilesCount += Directory.EnumerateFiles(directoryName, "*").Count();
+                totalFilesCount += Directory.EnumerateFiles(directoryName, "*").Count();
 
                 manualResetEvent.WaitOne();
 
@@ -223,7 +370,7 @@ namespace FileSearch
         {
             if (labelTotalFiles.InvokeRequired)
             {
-                Action showAllFilesNumber = delegate { labelTotalFiles.Text = "Всего файлов: " + allFilesCount; };
+                Action showAllFilesNumber = delegate { labelTotalFiles.Text = "Всего файлов: " + totalFilesCount; };
                 labelTotalFiles.Invoke(showAllFilesNumber);
             }
         }
@@ -325,8 +472,8 @@ namespace FileSearch
             searchButton.Enabled = false;
             stopSearchButton.Enabled = true;
             chooseFolderButton.Enabled = false;
-            foundFiles = 0;
-            allFilesCount = 0;
+            foundFilesCount = 0;
+            totalFilesCount = 0;
         }
 
         private void SearchStoppedUpdate()
