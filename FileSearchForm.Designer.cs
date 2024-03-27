@@ -49,6 +49,8 @@
             this.labelTotalFiles = new System.Windows.Forms.Label();
             this.groupBoxFoundFiles = new System.Windows.Forms.GroupBox();
             this.labelFoundFiles = new System.Windows.Forms.Label();
+            this.groupBoxCurrentDirectory = new System.Windows.Forms.GroupBox();
+            this.textBoxCurrentDirectory = new System.Windows.Forms.TextBox();
             this.groupBoxSearchParameters.SuspendLayout();
             this.groupBoxVisualParameters.SuspendLayout();
             this.groupBoxSearchString.SuspendLayout();
@@ -58,6 +60,7 @@
             this.groupBoxSearchTime.SuspendLayout();
             this.groupBoxFilesTotal.SuspendLayout();
             this.groupBoxFoundFiles.SuspendLayout();
+            this.groupBoxCurrentDirectory.SuspendLayout();
             this.SuspendLayout();
             // 
             // searchButton
@@ -83,7 +86,7 @@
             this.fileSearchResultTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.fileSearchResultTreeView.Location = new System.Drawing.Point(3, 22);
             this.fileSearchResultTreeView.Name = "fileSearchResultTreeView";
-            this.fileSearchResultTreeView.Size = new System.Drawing.Size(716, 488);
+            this.fileSearchResultTreeView.Size = new System.Drawing.Size(716, 486);
             this.fileSearchResultTreeView.TabIndex = 3;
             // 
             // stopSearchButton
@@ -213,7 +216,7 @@
             this.groupBoxSearchResult.Controls.Add(this.fileSearchResultTreeView);
             this.groupBoxSearchResult.Location = new System.Drawing.Point(12, 12);
             this.groupBoxSearchResult.Name = "groupBoxSearchResult";
-            this.groupBoxSearchResult.Size = new System.Drawing.Size(722, 513);
+            this.groupBoxSearchResult.Size = new System.Drawing.Size(722, 511);
             this.groupBoxSearchResult.TabIndex = 16;
             this.groupBoxSearchResult.TabStop = false;
             this.groupBoxSearchResult.Text = "Результат поиска";
@@ -279,17 +282,41 @@
             this.labelFoundFiles.TabIndex = 0;
             this.labelFoundFiles.Text = "0";
             // 
+            // groupBoxCurrentDirectory
+            // 
+            this.groupBoxCurrentDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxCurrentDirectory.Controls.Add(this.textBoxCurrentDirectory);
+            this.groupBoxCurrentDirectory.Location = new System.Drawing.Point(15, 526);
+            this.groupBoxCurrentDirectory.Name = "groupBoxCurrentDirectory";
+            this.groupBoxCurrentDirectory.Size = new System.Drawing.Size(1230, 64);
+            this.groupBoxCurrentDirectory.TabIndex = 20;
+            this.groupBoxCurrentDirectory.TabStop = false;
+            this.groupBoxCurrentDirectory.Text = "Текущая директория";
+            // 
+            // textBoxCurrentDirectory
+            // 
+            this.textBoxCurrentDirectory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCurrentDirectory.Location = new System.Drawing.Point(6, 26);
+            this.textBoxCurrentDirectory.Name = "textBoxCurrentDirectory";
+            this.textBoxCurrentDirectory.ReadOnly = true;
+            this.textBoxCurrentDirectory.Size = new System.Drawing.Size(1218, 26);
+            this.textBoxCurrentDirectory.TabIndex = 0;
+            // 
             // FileSearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1257, 537);
+            this.ClientSize = new System.Drawing.Size(1257, 601);
+            this.Controls.Add(this.groupBoxCurrentDirectory);
             this.Controls.Add(this.groupBoxFoundFiles);
             this.Controls.Add(this.groupBoxFilesTotal);
             this.Controls.Add(this.groupBoxSearchTime);
             this.Controls.Add(this.groupBoxSearchResult);
             this.Controls.Add(this.groupBoxSearch);
             this.Controls.Add(this.groupBoxSearchParameters);
+            this.MinimumSize = new System.Drawing.Size(1279, 657);
             this.Name = "FileSearchForm";
             this.Text = "FileSearch";
             this.groupBoxSearchParameters.ResumeLayout(false);
@@ -307,6 +334,8 @@
             this.groupBoxFilesTotal.PerformLayout();
             this.groupBoxFoundFiles.ResumeLayout(false);
             this.groupBoxFoundFiles.PerformLayout();
+            this.groupBoxCurrentDirectory.ResumeLayout(false);
+            this.groupBoxCurrentDirectory.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -334,6 +363,8 @@
         private System.Windows.Forms.GroupBox groupBoxFoundFiles;
         private System.Windows.Forms.Label labelTotalFiles;
         private System.Windows.Forms.Label labelFoundFiles;
+        private System.Windows.Forms.GroupBox groupBoxCurrentDirectory;
+        private System.Windows.Forms.TextBox textBoxCurrentDirectory;
     }
 }
 

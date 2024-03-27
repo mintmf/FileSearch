@@ -147,6 +147,19 @@ namespace FileSearch
             }
         }
 
+        private void InvokeUpdateCurrentDirectoryTextbox(string path)
+        {
+            if (textBoxCurrentDirectory.InvokeRequired)
+            {
+                Action action = delegate
+                {
+                    textBoxCurrentDirectory.Text = path;
+                };
+
+                textBoxCurrentDirectory.Invoke(action);
+            }
+        }
+
         /// <summary>
         /// Рекурсивная функция для поиска файлов
         /// </summary>
@@ -161,6 +174,8 @@ namespace FileSearch
         {
             var searchDirectoryName = new DirectoryInfo(searchDirectoryFullPath).Name;
 
+            InvokeUpdateCurrentDirectoryTextbox(searchDirectoryFullPath);
+            
             TreeNode currentNode;
 
             if (isRootNode)
