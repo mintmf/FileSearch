@@ -40,14 +40,14 @@
             this.groupBoxVisualParameters = new System.Windows.Forms.GroupBox();
             this.groupBoxSearchString = new System.Windows.Forms.GroupBox();
             this.groupBoxDirectory = new System.Windows.Forms.GroupBox();
-            this.textBoxDirectory = new System.Windows.Forms.TextBox();
+            this.textBoxRootDirectory = new System.Windows.Forms.TextBox();
             this.groupBoxSearch = new System.Windows.Forms.GroupBox();
             this.groupBoxSearchResult = new System.Windows.Forms.GroupBox();
             this.groupBoxSearchTime = new System.Windows.Forms.GroupBox();
             this.labelSearchTime = new System.Windows.Forms.Label();
             this.groupBoxFilesTotal = new System.Windows.Forms.GroupBox();
-            this.groupBoxFoundFiles = new System.Windows.Forms.GroupBox();
             this.labelTotalFiles = new System.Windows.Forms.Label();
+            this.groupBoxFoundFiles = new System.Windows.Forms.GroupBox();
             this.labelFoundFiles = new System.Windows.Forms.Label();
             this.groupBoxSearchParameters.SuspendLayout();
             this.groupBoxVisualParameters.SuspendLayout();
@@ -174,7 +174,7 @@
             // 
             // groupBoxDirectory
             // 
-            this.groupBoxDirectory.Controls.Add(this.textBoxDirectory);
+            this.groupBoxDirectory.Controls.Add(this.textBoxRootDirectory);
             this.groupBoxDirectory.Controls.Add(this.directoryLabel);
             this.groupBoxDirectory.Controls.Add(this.chooseFolderButton);
             this.groupBoxDirectory.Location = new System.Drawing.Point(6, 25);
@@ -184,13 +184,13 @@
             this.groupBoxDirectory.TabStop = false;
             this.groupBoxDirectory.Text = "Корневая директория";
             // 
-            // textBoxDirectory
+            // textBoxRootDirectory
             // 
-            this.textBoxDirectory.Location = new System.Drawing.Point(6, 25);
-            this.textBoxDirectory.Name = "textBoxDirectory";
-            this.textBoxDirectory.ReadOnly = true;
-            this.textBoxDirectory.Size = new System.Drawing.Size(376, 26);
-            this.textBoxDirectory.TabIndex = 8;
+            this.textBoxRootDirectory.Location = new System.Drawing.Point(6, 25);
+            this.textBoxRootDirectory.Name = "textBoxRootDirectory";
+            this.textBoxRootDirectory.ReadOnly = true;
+            this.textBoxRootDirectory.Size = new System.Drawing.Size(376, 26);
+            this.textBoxRootDirectory.TabIndex = 8;
             // 
             // groupBoxSearch
             // 
@@ -250,6 +250,15 @@
             this.groupBoxFilesTotal.TabStop = false;
             this.groupBoxFilesTotal.Text = "Всего файлов";
             // 
+            // labelTotalFiles
+            // 
+            this.labelTotalFiles.AutoSize = true;
+            this.labelTotalFiles.Location = new System.Drawing.Point(7, 26);
+            this.labelTotalFiles.Name = "labelTotalFiles";
+            this.labelTotalFiles.Size = new System.Drawing.Size(18, 20);
+            this.labelTotalFiles.TabIndex = 0;
+            this.labelTotalFiles.Text = "0";
+            // 
             // groupBoxFoundFiles
             // 
             this.groupBoxFoundFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -260,15 +269,6 @@
             this.groupBoxFoundFiles.TabIndex = 19;
             this.groupBoxFoundFiles.TabStop = false;
             this.groupBoxFoundFiles.Text = "Найдено файлов";
-            // 
-            // labelTotalFiles
-            // 
-            this.labelTotalFiles.AutoSize = true;
-            this.labelTotalFiles.Location = new System.Drawing.Point(7, 26);
-            this.labelTotalFiles.Name = "labelTotalFiles";
-            this.labelTotalFiles.Size = new System.Drawing.Size(18, 20);
-            this.labelTotalFiles.TabIndex = 0;
-            this.labelTotalFiles.Text = "0";
             // 
             // labelFoundFiles
             // 
@@ -326,7 +326,7 @@
         private System.Windows.Forms.GroupBox groupBoxSearch;
         private System.Windows.Forms.GroupBox groupBoxSearchString;
         private System.Windows.Forms.GroupBox groupBoxVisualParameters;
-        private System.Windows.Forms.TextBox textBoxDirectory;
+        private System.Windows.Forms.TextBox textBoxRootDirectory;
         private System.Windows.Forms.GroupBox groupBoxSearchResult;
         private System.Windows.Forms.GroupBox groupBoxSearchTime;
         private System.Windows.Forms.Label labelSearchTime;
