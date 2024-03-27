@@ -134,7 +134,7 @@ namespace FileSearch
             {
                 Action addNode = delegate
                 {
-                    //fileSearchResultTreeView.Nodes.Add(rootNode);
+                    fileSearchResultTreeView.Nodes.Add(rootNode);
                 };
 
                 fileSearchResultTreeView.Invoke(addNode);
