@@ -42,6 +42,7 @@
             this.groupBoxDirectory = new System.Windows.Forms.GroupBox();
             this.textBoxRootDirectory = new System.Windows.Forms.TextBox();
             this.groupBoxSearch = new System.Windows.Forms.GroupBox();
+            this.buttonRestartSearch = new System.Windows.Forms.Button();
             this.groupBoxSearchResult = new System.Windows.Forms.GroupBox();
             this.groupBoxSearchTime = new System.Windows.Forms.GroupBox();
             this.labelSearchTime = new System.Windows.Forms.Label();
@@ -66,9 +67,9 @@
             // searchButton
             // 
             this.searchButton.Enabled = false;
-            this.searchButton.Location = new System.Drawing.Point(6, 25);
+            this.searchButton.Location = new System.Drawing.Point(12, 24);
             this.searchButton.Name = "searchButton";
-            this.searchButton.Size = new System.Drawing.Size(161, 45);
+            this.searchButton.Size = new System.Drawing.Size(117, 45);
             this.searchButton.TabIndex = 0;
             this.searchButton.Text = "Искать";
             this.searchButton.UseVisualStyleBackColor = true;
@@ -92,9 +93,9 @@
             // stopSearchButton
             // 
             this.stopSearchButton.Enabled = false;
-            this.stopSearchButton.Location = new System.Drawing.Point(173, 25);
+            this.stopSearchButton.Location = new System.Drawing.Point(135, 24);
             this.stopSearchButton.Name = "stopSearchButton";
-            this.stopSearchButton.Size = new System.Drawing.Size(160, 45);
+            this.stopSearchButton.Size = new System.Drawing.Size(117, 45);
             this.stopSearchButton.TabIndex = 4;
             this.stopSearchButton.Text = "Остановить";
             this.stopSearchButton.UseVisualStyleBackColor = true;
@@ -122,9 +123,9 @@
             // continueFileSearchButton
             // 
             this.continueFileSearchButton.Enabled = false;
-            this.continueFileSearchButton.Location = new System.Drawing.Point(339, 25);
+            this.continueFileSearchButton.Location = new System.Drawing.Point(258, 24);
             this.continueFileSearchButton.Name = "continueFileSearchButton";
-            this.continueFileSearchButton.Size = new System.Drawing.Size(160, 45);
+            this.continueFileSearchButton.Size = new System.Drawing.Size(128, 45);
             this.continueFileSearchButton.TabIndex = 8;
             this.continueFileSearchButton.Text = "Продолжить";
             this.continueFileSearchButton.UseVisualStyleBackColor = true;
@@ -198,6 +199,7 @@
             // groupBoxSearch
             // 
             this.groupBoxSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSearch.Controls.Add(this.buttonRestartSearch);
             this.groupBoxSearch.Controls.Add(this.searchButton);
             this.groupBoxSearch.Controls.Add(this.stopSearchButton);
             this.groupBoxSearch.Controls.Add(this.continueFileSearchButton);
@@ -207,6 +209,18 @@
             this.groupBoxSearch.TabIndex = 15;
             this.groupBoxSearch.TabStop = false;
             this.groupBoxSearch.Text = "Поиск";
+            // 
+            // buttonRestartSearch
+            // 
+            this.buttonRestartSearch.Enabled = false;
+            this.buttonRestartSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.buttonRestartSearch.Location = new System.Drawing.Point(392, 24);
+            this.buttonRestartSearch.Name = "buttonRestartSearch";
+            this.buttonRestartSearch.Size = new System.Drawing.Size(107, 45);
+            this.buttonRestartSearch.TabIndex = 9;
+            this.buttonRestartSearch.Text = "Повторить";
+            this.buttonRestartSearch.UseVisualStyleBackColor = true;
+            this.buttonRestartSearch.Click += new System.EventHandler(this.buttonRestartSearch_Click);
             // 
             // groupBoxSearchResult
             // 
@@ -319,6 +333,7 @@
             this.MinimumSize = new System.Drawing.Size(1279, 657);
             this.Name = "FileSearchForm";
             this.Text = "FileSearch";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FileSearchForm_FormClosed);
             this.groupBoxSearchParameters.ResumeLayout(false);
             this.groupBoxVisualParameters.ResumeLayout(false);
             this.groupBoxVisualParameters.PerformLayout();
@@ -365,6 +380,7 @@
         private System.Windows.Forms.Label labelFoundFiles;
         private System.Windows.Forms.GroupBox groupBoxCurrentDirectory;
         private System.Windows.Forms.TextBox textBoxCurrentDirectory;
+        private System.Windows.Forms.Button buttonRestartSearch;
     }
 }
 

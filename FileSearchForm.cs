@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace FileSearch
 {
@@ -30,6 +32,15 @@ namespace FileSearch
         {
             InitializeComponent();
             LoadSettings();
+            PreventTreeFlickering();
+        }
+
+        /// <summary>
+        /// Предотвращение мигания дерева
+        /// </summary>
+        private void PreventTreeFlickering()
+        {
+            PreventTreeFlickeringHelper.EnableDoubleBuffering(fileSearchResultTreeView);
         }
 
         /// <summary>
@@ -67,14 +78,17 @@ namespace FileSearch
             fileSearchResultTreeView.Nodes.Clear();
             labelTotalFiles.Text = String.Empty;
             labelFoundFiles.Text = String.Empty;
+            buttonRestartSearch.Enabled = false;
         }
 
         private void CreateStopWatchAndTimer()
         {
             stopwatch = new Stopwatch();
 
-            timer = new System.Windows.Forms.Timer();
-            timer.Interval = 1;
+            timer = new System.Windows.Forms.Timer
+            {
+                Interval = 1
+            };
             timer.Tick += Timer_Tick;
             timer.Start();
 
@@ -85,9 +99,11 @@ namespace FileSearch
         {
             fileSearchThread?.Abort();
 
-            fileSearchThread = new Thread(new ThreadStart(FileSearchWrapper));
+            fileSearchThread = new Thread(new ThreadStart(FileSearchWrapper))
+            {
+                IsBackground = true
+            };
 
-            fileSearchThread.IsBackground = true;
             fileSearchThread.Start();
         }
 
@@ -376,6 +392,7 @@ namespace FileSearch
             stopSearchButton.Enabled = false;
             continueFileSearchButton.Enabled = true;
             chooseFolderButton.Enabled = true;
+            buttonRestartSearch.Enabled = true;
         }
 
         private void SearchResumedUpdate()
@@ -383,6 +400,7 @@ namespace FileSearch
             continueFileSearchButton.Enabled = false;
             searchButton.Enabled = false;
             stopSearchButton.Enabled = true;
+            buttonRestartSearch.Enabled = false;
         }
 
         private void SearchCompletedUpdate()
@@ -390,6 +408,18 @@ namespace FileSearch
             chooseFolderButton.Enabled = true;
             searchButton.Enabled = true;
             stopSearchButton.Enabled = false;
+            buttonRestartSearch.Enabled = true;
+        }
+
+        private void buttonRestartSearch_Click(object sender, EventArgs e)
+        {
+            searchButton_Click(sender, e);
+            continueFileSearchButton.Enabled = false;
+        }
+
+        private void FileSearchForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            UpdateSettings();
         }
     }
 }
